@@ -25,7 +25,7 @@ The data set is a 19579 x 3 matrix. There are three columns: “id”, “text�
 
 ### Description of Authors
 
-![image](figs/Edgar_Allan_Poe_dangerreotype.jpg)
+![image](figs/Edgar_Allan_Poe_daguerreotype_crop.jpg)
 
 Edgar Allan Poe was an American writer, editor, and literary critic. Poe is best known for this poetry and short stories. His writing style was recognized as typical “Gothic” style which presented either death, lost love or both. 
 Masterpiece: The Fall of the House of Usher, The Tell-Tale Heart, The Raven
