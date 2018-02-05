@@ -25,12 +25,12 @@ The data set is a 19579 x 3 matrix. There are three columns: “id”, “text�
 
 ### Description of Authors
 
-![image](figs/Edgar_Allan_Poe_dangerreotype.jpg)
+![image](figs/Edgar_Allan_Poe_daguerreotype_crop.png)
 
 Edgar Allan Poe was an American writer, editor, and literary critic. Poe is best known for this poetry and short stories. His writing style was recognized as typical “Gothic” style which presented either death, lost love or both. 
 Masterpiece: The Fall of the House of Usher, The Tell-Tale Heart, The Raven
 
-![image](figs/330px_H._P._Lovecraft,_June_1934.jpg)
+![image](figs/330px_H_P_Lovecraft_June_1934.jpg)
 
 Howard Philips Lovecraft: 
 HP Lovecraft was an American author of fantasy, horror, and science fiction. His writing style was the “cosmism” or “cosmic horror”. It means life is incomprehensible to humankind and universe is inimical to the interest of humankind.
