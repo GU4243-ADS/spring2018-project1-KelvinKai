@@ -1,26 +1,44 @@
 ---
 title: "Project1_SpookyData_text_minging"
 UNI: kl3016
-Name: Kai Li
 output:
   pdf_document: default
   html_notebook: default
-
+  html_document:
+    df_print: paged
+Name: Kai Li
 ---
 
-This is an [R Markdown](http://rmarkdown.rstudio.com) Notebook. When you execute code within the notebook, the results appear beneath the code. 
+# Project and Data Description
+This project is about the Natural Language Processing (NLP). The dataset comes from Kaggle Spooky Author Identification. In this project, besides reproduction of the tutorial, new findings:
+Section 1
+Use streaming method to process data
+Comparing streaming and non-steaming differences in top frequency words in both world cloud and top frequency used for each author
+Section 2
+Explore punctuation mark feature such as comma and semicolon as features
+Convert those features into numerical features
+Classification by using Principal Component Analysis (PCA) method 
+Section 3
+Sentimental analysis in sentence level
+Comparing results of sentimental analysis in both words and sentence level
 
-Try executing this chunk by clicking the *Run* button within the chunk or by placing your cursor inside it and pressing *Ctrl+Shift+Enter*. 
-Add a new chunk by clicking the *Insert Chunk* button on the toolbar or by pressing *Ctrl+Alt+I*.
+The data set is a 19579 x 3 matrix. There are three columns: "id", "text" and "author", and 19579 rows of text from three popular horror authors: Edgar Allan Poe (EAP), HP Lovecraft (HPL), and Mary Wollstonecraft Shelley (MWS).
 
-When you save the notebook, an HTML file containing the code and output will be saved alongside it (click the *Preview* button or press *Ctrl+Shift+K* to preview the HTML file).
+## Description of Authors
+Edgar Allan Poe was an American writer, editor, and literary critic. Poe is best known for this poetry and short stories. His writing style was recognized as typical "Gothic" style which presented either death, lost love or both. 
+Masterpiece: The Fall of the House of Usher, The Tell-Tale Heart, The Raven
+Howard Philips Lovecraft: 
+HP Lovecraft was an American author of fantasy, horror, and science fiction. His writing style was the "cosmism" or "cosmic horror". It means life is incomprehensible to humankind and universe is inimical to the interest of humankind.
+Masterpiece: The Complete Fiction of H. P. Lovecraft, The Call of Cthulhu, Great Tales of Horror
+Mary Wollstonecraft Shelley:
+Mary Wollstonecraft Shelly was an English author of a horror novel. Her most famous novel is Frankenstein or Modern Prometheus. Shelley was good at combining love and horror and shown the romantic features in her horror novel.
+Masterpiece: Frankenstein, Modern Prometheus
 
-The preview shows you a rendered HTML copy of the contents of the editor. Consequently, unlike *Knit*, *Preview* does not run any R code chunks. Instead, the output of the chunk when it was last run in the editor is displayed.
 
 
-## Section 0: Package Used and Load
+# Section 0: Package Used and Load
 ```{r}
-#R package used in project
+# R package load
 library(ggplot2)
 library(dplyr)
 library(tibble)
@@ -32,7 +50,6 @@ library(wordcloud)
 library(ggridges)
 library(textstem)
 library(compare)
-library(NMF)
 library(devtools)
 library(pca3d)
 library(wordcloud2)
@@ -40,7 +57,7 @@ library(wordcloud2)
 
 ```
 
-# Multiple plot function
+## Multiple plot function
 ```{r}
 # Reference: http://www.cookbook-r.com/Graphs/Multiple_graphs_on_one_page_(ggplot2)/
 # ggplot objects can be passed in ..., or to plotlist (as a list of ggplot objects)
@@ -89,14 +106,14 @@ multiplot <- function(..., plotlist=NULL, file, cols=1, layout=NULL) {
 ```
 
 
-## Section 1: Data cleaning and visualation
+# Section 1: Data cleaning and visualation
 Read the data and process sentences to one word per row. 
 Also, stream words by use the function
-Try to split sentences into two or three worlds per row to explore some meaningful features.
+Try to split sentences into two or three words per row to explore some meaningful features.
 
-# Tokenization & Streaming
+## Tokenization & Streaming
 ```{r}
-# read the data
+# Read the data
 spooky <- read.csv('../data/spooky.csv', as.is = TRUE)
 
 sum(is.na(spooky))
@@ -107,31 +124,31 @@ spooky$author <- as.factor(spooky$author)
 spooky_wrd <- unnest_tokens(spooky, word, text)
 spooky_wrd <- anti_join(spooky_wrd, stop_words, by = "word")
 
-#Stream words
+# Streaming
 spooky_wrd1 <- spooky_wrd
 spooky_wrd1$stem <- stem_words(spooky_wrd1$word, language = "porter")
 
 
 ```
-Streaming helps combine some words with same meaning.However,by oberserving the data set after streaming, there are some problems exist. For example, "happy" becomes "happi" after streaming. This would have negative impace on some analysis especially the sentimental analysis.
+Streaming helps combine some words with same meaning.However, by observing the data set after streaming, there are some problems exist. For example, "happy" becomes "happi" after streaming. This would have a negative impact on some analysis especially the sentimental analysis.
 
 
 
-# Make a table with two or three words per row and remove 'stop words'
+## Make a table with two or three words per row and remove 'stop words'
 ```{r}
-# set n=2 to split words, so two words are considered as one cell in the data set.
+# Set n=2 to split words, so two words are considered as one cell in the dataset
 spooky_wrd2 <- unnest_tokens(spooky, word, text, token = "skip_ngrams", n = 2)
 spooky_wrd2 <- anti_join(spooky_wrd2, stop_words, by = "word")
 
-# set n=2 
+# Set n=2 
 spooky_wrd3 <- unnest_tokens(spooky, word, text, token = "skip_ngrams", n = 3)
 spooky_wrd3 <- anti_join(spooky_wrd3, stop_words, by = "word")
 ```
 
 
-# Worldcloud for single words with and without streaming
+## Wordcloud for single words with and without streaming
 ```{r}
-# explore words without streaming frequency 
+# Explore words without streaming frequency 
 x <- count(group_by(spooky_wrd, word))
 words <- x$word
 freqs <- x$n
@@ -144,30 +161,27 @@ wordcloud2(x[1:150,], size= 1.0, shape = "round")
 
 ```
 
-# Worldcloud for streaming words
+## Wordcloud for streaming words
 ```{r}
-# explore words with streaming frequency 
+# Explore words with streaming frequency 
 x1 <- count(group_by(spooky_wrd1, stem))
 words1 <- x1$stem
 freqs1 <- x1$n
 x1 <- x1[order(-x1$n),]
 
 
-
-
 wordcloud2(x1[1:150,], size= 1.0, shape = "round")
 
 
 ```
-Comparing two wordclouds, after streaming the frequency of certain words increaing such as "hoop" and "pass". Some seious problems are happened such as "eye" becoming "ey", "y" at the end becoming "i".
+Comparing two-word clouds, after streaming the frequency of certain words increasing such as "hoop" and "pass". Some serious problems are happened such as "eye" becoming "ey", "y" at the end becoming "i".
 
-
-# Compare differences between streaming and non-streaming words in top 50 frequently.
+## Compare differences between streaming and non-streaming words in top 50 frequently.
 ```{r}
 x3 <- x[order(-x$n),]
 x4 <- x1[order(-x1$n),]
 
-# compare the top 50 frequencies words between streaming and unstreaming data sets
+# compare the top 50 frequencies words between streaming and non-streaming datasets
 comparison <- cbind(x3$word[1:50], x3$n[1:50], x4$stem[1:50], x4$n[1:50])
 comparison <- data.frame(comparison)
 names(comparison) <- c("word non-streaming","frequency1", "word streaming", "frequency2")
@@ -175,8 +189,32 @@ comparison
 ```
 This table of comparison makes it clear that the changes of frequencies between streaming words list and non-streaming words list. 
 
+## Wordcloud for two-words per row
+```{r}
+# Explore words with streaming frequency 
+xx1 <- count(group_by(spooky_wrd2, word))
+xx1 <- xx1[order(-xx1$n),]
 
-# Plot the most frequnt streaming words used each author
+
+wordcloud2(xx1[1:150,], size= 1.0, shape = "round")
+
+
+```
+
+## Wordcloud for three-words per row
+```{r}
+# Explore words with streaming frequency 
+xxx1 <- count(group_by(spooky_wrd3, word))
+xxx1 <- xxx1[order(-xx1$n),]
+
+
+wordcloud2(xxx1[1:150,], size= 1.0, shape = "round")
+
+```
+The word cloud for two-words or three-words is not very meaningful. The high-frequency terms usually do not have any information. However, it can be improved by advanced algorithms or dictionary to recognize the phrase rather than split into every two words.
+
+
+## Plot the most frequent streaming words used each author
 ```{r}
 # Counts number of times each author used each word.
 author_words <- count(group_by(spooky_wrd1, stem, author))
@@ -214,99 +252,105 @@ f2 <- ggplot(author_words) +
   theme(legend.position = "none")+
   ggtitle("Most frequent words used by Author (non-streaming)")
 
-png("../figs/Most frequent words used by Author (non-streaming).png")
+#png("../figs/Most frequent words used by Author (non-streaming).png")
 f2
-dev.off()
+#dev.off()
 
 
-png("../figs/Most frequent words used by Author (streaming).png")
+#png("../figs/Most frequent words used by Author (streaming).png")
 f1
-dev.off()
+#dev.off()
 ```
 It is a better visualization of words frequencies for differences with or without streaming.
 
 
-## Section 2: Converting punctuation mark features to numerical features and Run Clustering
-# Special features
+# Section 2: Converting punctuation mark features to numerical features and Clustering
+## Punctuation mark features
 ```{r}
-
+# Initialize the punctuation mark features
 SPspooky <- spooky
 SPspooky$comma      <- 0
 SPspooky$semicolon  <- 0
 SPspooky$quote      <- 0
 
+# Convert string features into numerical features
 SPspooky$comma[1:19579]        <- as.numeric(str_count(SPspooky$text[1:19579], ','))
 SPspooky$semicolon[1:19579]    <- as.numeric(str_count(SPspooky$text[1:19579], ';'))
 SPspooky$quote[1:19579]        <- as.numeric(str_count(SPspooky$text[1:19579], '"'))
 SPspooky$sen_length <- str_length(SPspooky$text)
 
-
+# Plot the length of sentences
 p1 <- ggplot(SPspooky) +
       geom_bar(aes(author, fill = author)) +
-      theme(legend.position = "none")
+      theme(legend.position = "left")+
+      ggtitle("Words used for each author")
 
 
 p2 <- ggplot(SPspooky) +
       geom_density_ridges(aes(sen_length, author, fill = author)) +
       scale_x_log10() +
-      theme(legend.position = "none") +
-      labs(x = "Sentence length [# characters]")
+      theme(legend.position = "right") +
+      labs(x = "Sentence length [# characters]")+
+      ggtitle("Sentences length for each author")
 
-png("../figs/Author words used and sentences length.png")
+#png("../figs/Author words used and sentences length.png")
 multiplot(p1, p2, cols =2)
-dev.off()
+#dev.off()
 
 
 
-
+# Plot punctuation features for each author
 p3 <- ggplot(SPspooky,aes(x= comma, fill = author, )) +
       geom_density( bw = 0.1, alpha = 0.3) +
       scale_x_log10() +
-      theme(legend.position = "none") +
-      labs(x = "Comma Used")
+      theme(legend.position = "top") +
+      labs(x = "Comma Used")+
+      ggtitle("Comma used for each author")
 
 p4 <- ggplot(SPspooky) +
       geom_density(aes(semicolon, fill = author), bw = 0.1, alpha = 0.3) +
       scale_x_log10() +
-      theme(legend.position = "none") +
-      labs(x = "Semicolon Used")
+      theme(legend.position = "top") +
+      labs(x = "Semicolon Used")+
+      ggtitle("Semicolon used for each author")
 
 p5 <- ggplot(SPspooky) +
       geom_density(aes(quote, fill = author), bw = 0.1, alpha = 0.3) +
       scale_x_log10() +
-      theme(legend.position = "none") +
-      labs(x = "Quote Used")
+      theme(legend.position="top")+
+      labs(x = "Quote Used")+
+      ggtitle("Quote used for each author")
 
 
-png("../figs/Punctuation marks frequences for each author.png")
+#png("../figs/Punctuation marks frequences for each author.png")
 multiplot(p3,p4,p5, cols =3)
-dev.off()
+#dev.off()
  
 ```
 
 
-# Classification Based on fatures explored above
+## Classification Based on features explored above
 ```{r}
-
+# Use PCA method to do classification
 pca = prcomp(SPspooky[,4:7], scale. = TRUE)
-p <- pca2d(pca, group=SPspooky$author, legend="bottomright",biplot=TRUE, biplot.vars=4)
+p <- pca2d(pca, group=SPspooky$author, legend="bottomright",biplot=TRUE, biplot.vars=4, title = 'PCA plot for punctuation marks and length of sentences')
 
-png("../figs/PCA Clastering Plot.png")
-pca2d(pca, group=SPspooky$author, legend="bottomright",biplot=TRUE, biplot.vars=4)
-dev.off()
+#png("../figs/PCA Clastering Plot.png")
+#pca2d(pca, group=SPspooky$author, legend="bottomright",biplot=TRUE, biplot.vars=4)
+#dev.off()
 
 
 ```
-Explore festure of punctuation marks such as ",", ";" and "'". Try to do classification by using PCA methods. However, the plots shows comma and semicolon are at the same direction with sentence length. and quote are relatively less related to the other three.
-It is reasonable. When the length of sentences becomes longer, it tends to have more comma or semicolon. Thus, it is hard to use the length of sentences, comma, semicolon to predict the author. However, at the quote direction, there are more yellow dots concentrated. It means EAP tends to use more quote than ohter two authors. In other words, EAP would have more dialogs than the other two authors.
+Explore feature of punctuation marks such as ",", ";" and "'". Try to do classification by using PCA methods. However, the plots show comma and semicolon are in the same direction with sentence length. and the quote is relatively less related to the other three.
+It is reasonable. When the length of sentences becomes longer, it tends to have more comma or semicolon. Thus, it is hard to use the length of sentences, comma, semicolon to predict the author. However, at the quote direction, there are more yellow dots concentrated. It means EAP tends to use more quote than other two authors. In other words, EAP would have more dialogs than the other two authors.
 
 
-## Section 3: Sentiment Analysis
-# Sentimental Analysis in Word Level
+# Section 3: Sentiment Analysis
+## Sentimental Analysis in Word Level
 Do not use the streamed data for the sentimental analysis, because some words are twisted. For example, after streaming happy would change to happi. Such change would not return correct results.
 
 ```{r}
-# Keep words that have been classified within the NRC lexicon.
+# Keep words that have been classified into the NRC lexicon.
 nrc <- get_sentiments('nrc')
 sentiments  <- inner_join(spooky_wrd, get_sentiments('nrc'), by = "word")
 
@@ -314,29 +358,31 @@ sentiments  <- inner_join(spooky_wrd, get_sentiments('nrc'), by = "word")
 count(sentiments, sentiment)
 count(sentiments, author, sentiment)
 
-png("../figs/Sentimental analysis.png")
+#png("../figs/Sentimental analysis.png")
 ggplot(count(sentiments, sentiment)) + 
-  geom_col(aes(sentiment, n, fill = sentiment))
-dev.off()
+  geom_col(aes(sentiment, n, fill = sentiment))+
+  ggtitle("Sentimental features for the whole data")
+#dev.off()
 
-png("../figs//Sentimental analysis for each author.png")
+#png("../figs//Sentimental analysis for each author.png")
 ggplot(count(sentiments, author, sentiment)) + 
   geom_col(aes(sentiment, n, fill = sentiment)) + 
   facet_wrap(~ author) +
   coord_flip() +
-  theme(legend.position = "none")
-dev.off()
+  theme(legend.position = "none")+
+  ggtitle("Top sentimental festure for each author")
+#dev.off()
 
 ```
 
-# Sentiment Analysis in Sentence Level
+## Sentiment Analysis in Sentence Level
 ```{r}
-#use the dictionary nrc. Seperate its sentiment columns into two categories: positive and negative
+# Use the dictionary nrc. Separate its sentiment columns into two categories: positive and negative
 posWords <- c("anticipation","joy","positve","surprise","trust")
 negWords <- c("anger","disgust","fear","negative","sadness")
 
 
-#set 1 for positive category, and -1 for negative category.
+# Set 1 for the positive category, and -1 for the negative category
 SentimentJudge <-  for (i in 1:nrow(nrc)){
     if (nrc$sentiment[i] %in% posWords) {
       nrc$score[i] <- 1
@@ -350,7 +396,7 @@ SentimentJudge <-  for (i in 1:nrow(nrc)){
 nrc$lengths<-unlist(lapply(nrc$word, nchar))
 nrc<-nrc[ order(-nrc[,4]),]
 
-#write the function to compare words between sentences and dictory, and then calculate the socre for each sentence
+# Write the function to compare words between sentences and directory, and then calculate the score for each sentence
 scoreSentence <- function(sentence){
   score<-0
   for(i in 1:nrow(nrc)){
@@ -363,27 +409,27 @@ scoreSentence <- function(sentence){
   score
 }
 
-#pick a small set
+# Pick a small set
 small_sample <- spooky[1:100,]
 SScore<- unlist(lapply(small_sample$text, scoreSentence))
 small_sample <- cbind(small_sample, SScore)
 
-#If the score of sentence >0, it consider as the positive sentiment. If the score of sentence <0, it consider as the negative sentiment. 
+# If the score of sentence >0, it considers as the positive sentiment. If the score of sentence <0, it considers as the negative sentiment. 
 
-png("../figs/Sentimental analysis at sentence level.png")
+#png("../figs/Sentimental analysis at sentence level.png")
 qplot( author,SScore, data=small_sample, geom=c("boxplot", "jitter"), 
    fill=author, main="Sentence Sentimental Scores for the first 100 Samples",
    xlab="", ylab="Sentence Sentimental Score")
-dev.off()
+#dev.off()
 
 ```
-Sentimental analysis in sentecn level:
-It tooks lots of time to run the program, so pick a small set as the sample to run the sentimental analysis at sentence level. By observing the box plot, it shows MWS has relavtivly lower scores than other two authors. Majority of dots are located below the 0 line. It means the majority of the three authors' sentences are considered as the negative attitude. It mattches their writting style. Also, MWS have lower scores can be shown by the words sentimental analysis that MWS used more negative words. 
+The sentimental analysis in sentence level:
+It took lots of time to run the program, so pick a small set as the sample to run the sentimental analysis at the sentence level. By observing the box plot, it shows MWS has relatively lower scores than other two authors. Majority of dots are located below the 0 line. It means the majority of the three authors' sentences are considered as the negative attitude. It matches their writing style. Also, MWS have lower scores can be shown by the words sentimental analysis that MWS used more negative words. 
 
 problem:
-1. it is hard to determin such large set of sentecs
-2. Some worlds present different semtimental such lovely. Lovely can represent both positive and negative.
-3. It is not accurate to determin levels of sentiment
+1. it is hard to determine such large set of sentences
+2. Some worlds present different sentimental such lovely. Lovely can represent both positive and negative.
+3. It is not accurate to determine levels of sentiment
 
 
 
