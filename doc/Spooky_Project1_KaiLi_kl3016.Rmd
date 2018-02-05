@@ -35,13 +35,14 @@ library(compare)
 library(NMF)
 library(devtools)
 library(pca3d)
+library(wordcloud2)
 
 
 ```
 
 # Multiple plot function
 ```{r}
-# Refer to http://www.cookbook-r.com/Graphs/Multiple_graphs_on_one_page_(ggplot2)/
+# Reference: http://www.cookbook-r.com/Graphs/Multiple_graphs_on_one_page_(ggplot2)/
 # ggplot objects can be passed in ..., or to plotlist (as a list of ggplot objects)
 # - cols:   Number of columns in layout
 # - layout: A matrix specifying the layout. If present, 'cols' is ignored.
@@ -134,10 +135,12 @@ spooky_wrd3 <- anti_join(spooky_wrd3, stop_words, by = "word")
 x <- count(group_by(spooky_wrd, word))
 words <- x$word
 freqs <- x$n
+x <- x[order(-x$n),]
 
-png("../figs/Wordcloud_all.png")
-wordcloud(words, freqs, max.words = 50, color = c("purple4", "red4", "black"))
-dev.off()
+
+wordcloud2(x[1:150,], size= 1.0, shape = "round")
+
+
 
 ```
 
@@ -147,11 +150,14 @@ dev.off()
 x1 <- count(group_by(spooky_wrd1, stem))
 words1 <- x1$stem
 freqs1 <- x1$n
+x1 <- x1[order(-x1$n),]
 
 
-#png("../figs/Wordcloud_streamingWords.png")
-wordcloud(words1, freqs1, max.words = 50, color = c("purple4", "red4", "black"))
-#dev.off()
+
+
+wordcloud2(x1[1:150,], size= 1.0, shape = "round")
+
+
 ```
 Comparing two wordclouds, after streaming the frequency of certain words increaing such as "hoop" and "pass". Some seious problems are happened such as "eye" becoming "ey", "y" at the end becoming "i".
 
@@ -378,110 +384,6 @@ problem:
 1. it is hard to determin such large set of sentecs
 2. Some worlds present different semtimental such lovely. Lovely can represent both positive and negative.
 3. It is not accurate to determin levels of sentiment
-
-
-
-
-## Topic Modleing by using LDA and NMF
-# LDA 
-In the text mining, we are interested in the unsuperavised classification for the document. We are looking for the natural groups of these sentences. 
-The Latent Dirichlet Allocation is a popular method. In this model, it creats a mixture of topics and each topic as a mixture of words. For example, in a two-topic model, text 1 is 90% topic An and 10% topic B. Use special words appeared in the text to say the posible topoc for the text.
-```{r}
-sent_wrd_freqs <- count(spooky_wrd, id, word)
-head(sent_wrd_freqs)
-
-# Creates a DTM matrix
-spooky_wrd_tm <- cast_dtm(sent_wrd_freqs, id, word, n)
-spooky_wrd_tm
-length(unique(spooky_wrd$id))
-length(unique(spooky_wrd$word))
-
-```
-
-# Find the best fit of number for the Topic Modeling
-```{r}
-library("topicmodels")
-library("ldatuning")
-
-
-result <- FindTopicsNumber(
-  dtm,
-  topics = seq(from = 2, to = 15, by = 1),
-  metrics = c("Griffiths2004", "CaoJuan2009", "Arun2010", "Deveaud2014"),
-  method = "Gibbs",
-  control = list(seed = 77),
-  mc.cores = 2L,
-  verbose = TRUE
-)
-
-FindTopicsNumber_plot(FindTopicsNumber)
-```
-
-
-
-```{r}
-
-spooky_wrd_lda <- LDA(spooky_wrd_tm, k =10, control = list(seed = 1234))
-spooky_wrd_topics <- tidy(spooky_wrd_lda, matrix = "beta")
-spooky_wrd_topics
-
-
-# Grab the top five words for each topic.
-spooky_wrd_topics_5 <- ungroup(top_n(group_by(spooky_wrd_topics, topic), 5, beta))
-spooky_wrd_topics_5 <- arrange(spooky_wrd_topics_5, topic, -beta)
-spooky_wrd_topics_5 <- mutate(spooky_wrd_topics_5, term = reorder(term, beta))
-
-ggplot(spooky_wrd_topics_5) +
-  geom_col(aes(term, beta, fill = factor(topic)), show.legend = FALSE) +
-  facet_wrap(~ topic, scales = "free", ncol = 4) +
-  coord_flip()
-
-
-
-```
-
-
-# TF-IDF
-
-TF stands for term frequency or how often a word appears in a text and it is what is studied above in the word cloud. IDF stands for inverse document frequncy, and it is a way to pay more attention to words that are rare within the entire set of text data that is more sophisticated than simply removing stop words.  Multiplying these two values together calculates a term's tf-idf, which is the frequency of a term adjusted for how rarely it is used. 
-
-We'll use tf-idf as a heuristic index to indicate how frequently a certain author uses a word relative to the frequency that all the authors use the word.  Therefore we will find words that are characteristic for a specific author, a good thing to have if we are interested in solving the author identification problem.
-
-```{r}
-frequency <- count(spooky_wrd, author, word)
-tf_idf    <- bind_tf_idf(frequency, word, author, n)
-head(tf_idf)
-tail(tf_idf)
-
-tf_idf    <- arrange(tf_idf, desc(tf_idf))
-tf_idf    <- mutate(tf_idf, word = factor(word, levels = rev(unique(word))))
-
-# Grab the top thirty tf_idf scores in all the words 
-tf_idf_30 <- top_n(tf_idf, 30, tf_idf)
-
-ggplot(tf_idf_30) +
-  geom_col(aes(word, tf_idf, fill = author)) +
-  labs(x = NULL, y = "TF-IDF values") +
-  theme(legend.position = "top", axis.text.x  = element_text(angle=45, hjust=1, vjust=0.9))
-
-```
-
-Note that in the above, many of the words recognized by their tf-idf scores are names.  This makes sense -- if we see text referencing Raymond, Idris, or Perdita, we know almost for sure that MWS is the author.  But some non-names stand out.  EAP often uses "monsieur" and "jupiter" while HPL uses the words "bearded" and "attic" more frequently than the others.  We can also look at the most characteristic terms per author.
-
-```{r}
-# Grab the top twenty tf_idf scores in all the words for each author
-tf_idf <- ungroup(top_n(group_by(tf_idf, author), 20, tf_idf))
-  
-ggplot(tf_idf) +
-  geom_col(aes(word, tf_idf, fill = author)) +
-  labs(x = NULL, y = "tf-idf") +
-  theme(legend.position = "none") +
-  facet_wrap(~ author, ncol = 3, scales = "free") +
-  coord_flip() +
-  labs(y = "TF-IDF values")
-```
-
-
 
 
 
