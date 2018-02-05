@@ -7,7 +7,7 @@
 Term: Spring 2018
 
 
-![image](figs/sppooooky.png)
+![image](figs/sppooooky.jpg)
 ### Project and Data Description
 This project is about the Natural Language Processing (NLP). The dataset comes from Kaggle Spooky Author Identification. In this project, besides reproduction of the tutorial, new findings:
 Section 1
@@ -24,16 +24,17 @@ Comparing results of sentimental analysis in both words and sentence level
 The data set is a 19579 x 3 matrix. There are three columns: “id”, “text” and “author”, and 19579 rows of text from three popular horror authors: Edgar Allan Poe (EAP), HP Lovecraft (HPL), and Mary Wollstonecraft Shelley (MWS).
 
 ### Description of Authors
-![image](figs/Edgar_Allan_Poe_dangerreotype.png)
+
+![image](figs/Edgar_Allan_Poe_dangerreotype.jpg)
 Edgar Allan Poe was an American writer, editor, and literary critic. Poe is best known for this poetry and short stories. His writing style was recognized as typical “Gothic” style which presented either death, lost love or both. 
 Masterpiece: The Fall of the House of Usher, The Tell-Tale Heart, The Raven
 
-![image](figs/330px_H._P._Lovecraft,_June_1934.png)
+![image](figs/330px_H._P._Lovecraft,_June_1934.jpg)
 Howard Philips Lovecraft: 
 HP Lovecraft was an American author of fantasy, horror, and science fiction. His writing style was the “cosmism” or “cosmic horror”. It means life is incomprehensible to humankind and universe is inimical to the interest of humankind.
 Masterpiece: The Complete Fiction of H. P. Lovecraft, The Call of Cthulhu, Great Tales of Horror
 
-![image](figs/330px-RothwellMaryShelley.png)
+![image](figs/330px-RothwellMaryShelley.jpg)
 Mary Wollstonecraft Shelley:
 Mary Wollstonecraft Shelly was an English author of a horror novel. Her most famous novel is Frankenstein or Modern Prometheus. Shelley was good at combining love and horror and shown the romantic features in her horror novel.
 Masterpiece: Frankenstein, Modern Prometheus
@@ -47,17 +48,17 @@ Try to split sentences into two or three words per row to explore some meaningfu
 Process text with tokenization and streaming process. Convert text into a matrix with single, two-words, or three-words per row. 
 
 #### Wordcloud for single words with and without streaming
-![image](figs/Wodcloud_all.png)
+![image](figs/Wodcloud_all.PNG)
 #### Wordcloud for streaming words
-![image](figs/Wordcloud_streamingWords.png)
+![image](figs/Wordcloud_streamingWords.PNG)
 #### ompare differences between streaming and non-streaming words in top 50 frequently.
-![image](figs/Frequency table.png)
+![image](figs/Frequency table.PNG)
 By comparing these tow words and the frequency table, it shows that the streaming works well. Streaming helps combine some words with same meaning. However, by observing the data set after streaming, there are some problems exist. For example, "happy" becomes "happi" after streaming. This would have a negative impact on some analysis especially the sentimental analysis.
 
 #### Wordcloud for two-words per row
-![image](figs/Wordcloud two-words.png)
+![image](figs/Wordcloud two-words.PNG)
 #### Wordcloud for three-words per row
-![image](figs/Wordcloud three-words.png)
+![image](figs/Wordcloud three-words.PNG)
 The word cloud for two-words or three-words is not very meaningful. The high-frequency terms usually do not have any information. However, it can be improved by advanced algorithms or dictionary to recognize the phrase rather than split into every two words.
 
 ### Plot the most frequent streaming words used each author
