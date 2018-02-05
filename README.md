@@ -26,15 +26,18 @@ The data set is a 19579 x 3 matrix. There are three columns: “id”, “text�
 ### Description of Authors
 
 ![image](figs/Edgar_Allan_Poe_dangerreotype.jpg)
+
 Edgar Allan Poe was an American writer, editor, and literary critic. Poe is best known for this poetry and short stories. His writing style was recognized as typical “Gothic” style which presented either death, lost love or both. 
 Masterpiece: The Fall of the House of Usher, The Tell-Tale Heart, The Raven
 
 ![image](figs/330px_H._P._Lovecraft,_June_1934.jpg)
+
 Howard Philips Lovecraft: 
 HP Lovecraft was an American author of fantasy, horror, and science fiction. His writing style was the “cosmism” or “cosmic horror”. It means life is incomprehensible to humankind and universe is inimical to the interest of humankind.
 Masterpiece: The Complete Fiction of H. P. Lovecraft, The Call of Cthulhu, Great Tales of Horror
 
 ![image](figs/330px-RothwellMaryShelley.jpg)
+
 Mary Wollstonecraft Shelley:
 Mary Wollstonecraft Shelly was an English author of a horror novel. Her most famous novel is Frankenstein or Modern Prometheus. Shelley was good at combining love and horror and shown the romantic features in her horror novel.
 Masterpiece: Frankenstein, Modern Prometheus
@@ -53,17 +56,20 @@ Process text with tokenization and streaming process. Convert text into a matrix
 ![image](figs/Wordcloud_streamingWords.PNG)
 #### ompare differences between streaming and non-streaming words in top 50 frequently.
 ![image](figs/Frequency table.PNG)
+
 By comparing these tow words and the frequency table, it shows that the streaming works well. Streaming helps combine some words with same meaning. However, by observing the data set after streaming, there are some problems exist. For example, "happy" becomes "happi" after streaming. This would have a negative impact on some analysis especially the sentimental analysis.
 
 #### Wordcloud for two-words per row
 ![image](figs/Wordcloud two-words.PNG)
 #### Wordcloud for three-words per row
 ![image](figs/Wordcloud three-words.PNG)
+
 The word cloud for two-words or three-words is not very meaningful. The high-frequency terms usually do not have any information. However, it can be improved by advanced algorithms or dictionary to recognize the phrase rather than split into every two words.
 
 ### Plot the most frequent streaming words used each author
 ![image](figs/Most frequent words used by Author (non-streaming).png)
 ![image](figs/Most frequent words used by Author (streaming).png)
+
 It is a better visualization of words frequencies for differences with or without streaming.
 
 ## Section 2: Converting punctuation mark features to numerical features and Clustering
@@ -79,10 +85,12 @@ It is reasonable. When the length of sentences becomes longer, it tends to have 
 ## Section 3: Sentiment Analysis
 ### Sentimental Analysis in Word Level
 Do not use the streamed data for the sentimental analysis, because some words are twisted. For example, after streaming happy would change to happi. Such change would not return correct results.
+
 ![image](figs/Sentimental analysis for each author.png)
 
 ### Sentiment Analysis in Sentence Level
 ![image](figs/Sentimental analysis at sentence level.png)
+
 The sentimental analysis in sentence level:
 It took lots of time to run the program, so pick a small set as the sample to run the sentimental analysis at the sentence level. By observing the box plot, it shows MWS has relatively lower scores than other two authors. Majority of dots are located below the 0 line. It means the majority of the three authors' sentences are considered as the negative attitude. It matches their writing style. Also, MWS have lower scores can be shown by the words sentimental analysis that MWS used more negative words. 
 
