@@ -18,7 +18,7 @@ When you save the notebook, an HTML file containing the code and output will be 
 The preview shows you a rendered HTML copy of the contents of the editor. Consequently, unlike *Knit*, *Preview* does not run any R code chunks. Instead, the output of the chunk when it was last run in the editor is displayed.
 
 
-##Section 0: Package Used and Load
+#Section 0: Package Used and Load
 ```{r}
 #R package used in project
 library(ggplot2)
@@ -38,7 +38,8 @@ library(pca3d)
 
 
 ```
-# Multiple plot function
+
+##Multiple plot function
 ```{r}
 # Refer to http://www.cookbook-r.com/Graphs/Multiple_graphs_on_one_page_(ggplot2)/
 # ggplot objects can be passed in ..., or to plotlist (as a list of ggplot objects)
@@ -87,7 +88,7 @@ multiplot <- function(..., plotlist=NULL, file, cols=1, layout=NULL) {
 ```
 
 
-##Section 1: Data cleaning and visualation
+#Section 1: Data cleaning and visualation
 Read the data and process sentences to one word per row. 
 Also, stream words by use the function
 Try to split sentences into two or three worlds per row to explore some meaningful features.
@@ -219,7 +220,7 @@ dev.off()
 It is a better visualization of words frequencies for differences with or without streaming.
 
 
-##Section 2: Converting punctuation mark features to numerical features and Run Clustering
+#Section 2: Converting punctuation mark features to numerical features and Run Clustering
 #Special features
 ```{r}
 
@@ -294,7 +295,7 @@ Explore festure of punctuation marks such as ",", ";" and "'". Try to do classif
 It is reasonable. When the length of sentences becomes longer, it tends to have more comma or semicolon. Thus, it is hard to use the length of sentences, comma, semicolon to predict the author. However, at the quote direction, there are more yellow dots concentrated. It means EAP tends to use more quote than ohter two authors. In other words, EAP would have more dialogs than the other two authors.
 
 
-##Section 3: Sentiment Analysis
+#Section 3: Sentiment Analysis
 #Sentimental Analysis in Word Level
 Do not use the streamed data for the sentimental analysis, because some words are twisted. For example, after streaming happy would change to happi. Such change would not return correct results.
 
@@ -381,7 +382,7 @@ problem:
 
 
 
-##Topic Modleing by using LDA and NMF
+#Topic Modleing by using LDA and NMF
 #LDA 
 In the text mining, we are interested in the unsuperavised classification for the document. We are looking for the natural groups of these sentences. 
 The Latent Dirichlet Allocation is a popular method. In this model, it creats a mixture of topics and each topic as a mixture of words. For example, in a two-topic model, text 1 is 90% topic An and 10% topic B. Use special words appeared in the text to say the posible topoc for the text.
@@ -440,7 +441,7 @@ ggplot(spooky_wrd_topics_5) +
 ```
 
 
-## TF-IDF
+# TF-IDF
 
 TF stands for term frequency or how often a word appears in a text and it is what is studied above in the word cloud. IDF stands for inverse document frequncy, and it is a way to pay more attention to words that are rare within the entire set of text data that is more sophisticated than simply removing stop words.  Multiplying these two values together calculates a term's tf-idf, which is the frequency of a term adjusted for how rarely it is used. 
 
