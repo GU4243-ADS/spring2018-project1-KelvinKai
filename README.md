@@ -68,7 +68,7 @@ By comparing these tow words and the frequency table, it shows that the streamin
 The word cloud for two-words or three-words is not very meaningful. The high-frequency terms usually do not have any information. However, it can be improved by advanced algorithms or dictionary to recognize the phrase rather than split into every two words.
 
 ### Plot the most frequent streaming words used each author
-![image](figs/Mostfrequent (non-streaming).png)
+![image](figs/Mostfrequent(non-streaming).png)
 ![image](figs/Mostfrequent(streaming).png)
 
 It is a better visualization of words frequencies for differences with or without streaming.
