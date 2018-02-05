@@ -2,10 +2,10 @@
 title: "Project1_SpookyData_text_minging"
 UNI: kl3016
 output:
-  pdf_document: default
-  html_notebook: default
   html_document:
     df_print: paged
+  pdf_document: default
+  html_notebook: default
 Name: Kai Li
 ---
 
@@ -322,7 +322,7 @@ p5 <- ggplot(SPspooky) +
       ggtitle("Quote used for each author")
 
 
-#png("../figs/Punctuation marks frequences for each author.png")
+#png("../figs/PunctuationAuthor.png")
 multiplot(p3,p4,p5, cols =3)
 #dev.off()
  
@@ -347,7 +347,7 @@ It is reasonable. When the length of sentences becomes longer, it tends to have 
 
 # Section 3: Sentiment Analysis
 ## Sentimental Analysis in Word Level
-Do not use the streamed data for the sentimental analysis, because some words are twisted. For example, after streaming happy would change to happi. Such change would not return correct results.
+
 
 ```{r}
 # Keep words that have been classified into the NRC lexicon.
@@ -410,26 +410,29 @@ scoreSentence <- function(sentence){
 }
 
 # Pick a small set
-small_sample <- spooky[1:100,]
+small_sample <- spooky[50:150,]
 SScore<- unlist(lapply(small_sample$text, scoreSentence))
 small_sample <- cbind(small_sample, SScore)
 
 # If the score of sentence >0, it considers as the positive sentiment. If the score of sentence <0, it considers as the negative sentiment. 
-
-#png("../figs/Sentimental analysis at sentence level.png")
+#png("../figs/SentimentalAnalysisSentence.png")
 qplot( author,SScore, data=small_sample, geom=c("boxplot", "jitter"), 
    fill=author, main="Sentence Sentimental Scores for the first 100 Samples",
    xlab="", ylab="Sentence Sentimental Score")
 #dev.off()
 
 ```
+
+
+Do not use the streamed data for the sentimental analysis, because some words are twisted. For example, after streaming happy would change to happi. Such change would not return correct results.
+
 The sentimental analysis in sentence level:
-It took lots of time to run the program, so pick a small set as the sample to run the sentimental analysis at the sentence level. By observing the box plot, it shows MWS has relatively lower scores than other two authors. Majority of dots are located below the 0 line. It means the majority of the three authors' sentences are considered as the negative attitude. It matches their writing style. Also, MWS have lower scores can be shown by the words sentimental analysis that MWS used more negative words. 
+It took lots of time to run the program, so I picked a small set as the sample to run the sentimental analysis at the sentence level. By observing the box plot, it shows Mary Wollstonecraft Shelly (MWS) has a relatively higher mean of scores than other two authors. Combined with the sentimental analysis in words level, it shows the Shelly use more positive words. It matches her writing style that combining romantic with horror together.
+Majority of dots are located below the 0 line. It means three authors' majority of sentences are considered as the negative attitude. It matches their writing style. Also, MWS have lower scores can be shown by the words sentimental analysis that MWS used more negative words. 
 
 problem:
-1. it is hard to determine such large set of sentences
-2. Some worlds present different sentimental such lovely. Lovely can represent both positive and negative.
-3. It is not accurate to determine levels of sentiment
-
+1. It took very long time to process large data set.
+2. Some worlds present different sentimental such as lovely in dictionary "nrc". Lovely can represent both positive and negative in "nrc".
+3. It is not accurate to determine levels of sentiment. I only separate sentimental into two categories, but it could have more categories and each category has different scores.res.
 
 
