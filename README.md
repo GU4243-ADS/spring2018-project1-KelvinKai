@@ -1,12 +1,9 @@
-# Spring2018
 # Project 1: What did the spooky text tell us about authors?
-# Kai Li
+## Kai Li
 
 ----
 
-## [Project Description]
-This is the first and only *individual* (as opposed to *team*) this semester. 
-
+## Project Description
 Term: Spring 2018
 
 
