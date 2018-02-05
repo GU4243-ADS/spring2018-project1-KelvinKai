@@ -57,12 +57,13 @@ Process text with tokenization and streaming process. Convert text into a matrix
 #### ompare differences between streaming and non-streaming words in top 50 frequently.
 ![image](figs/Frequency_table.PNG)
 
+
 By comparing these tow words and the frequency table, it shows that the streaming works well. Streaming helps combine some words with same meaning. However, by observing the data set after streaming, there are some problems exist. For example, "happy" becomes "happi" after streaming. This would have a negative impact on some analysis especially the sentimental analysis.
 
 #### Wordcloud for two-words per row
-![image](figs/Wordcloud two-words.PNG)
+![image](figs/Wordcloud_two-words.PNG)
 #### Wordcloud for three-words per row
-![image](figs/Wordcloud three-words.PNG)
+![image](figs/Wordcloud_three-words.PNG)
 
 The word cloud for two-words or three-words is not very meaningful. The high-frequency terms usually do not have any information. However, it can be improved by advanced algorithms or dictionary to recognize the phrase rather than split into every two words.
 
