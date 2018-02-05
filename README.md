@@ -24,21 +24,22 @@ Comparing results of sentimental analysis in both words and sentence level
 The data set is a 19579 x 3 matrix. There are three columns: “id”, “text” and “author”, and 19579 rows of text from three popular horror authors: Edgar Allan Poe (EAP), HP Lovecraft (HPL), and Mary Wollstonecraft Shelley (MWS).
 
 ### Description of Authors
-
+#### Edgar Allan Poe
 ![image](figs/Edgar_Allan_Poe_daguerreotype_crop.png)
 
 Edgar Allan Poe was an American writer, editor, and literary critic. Poe is best known for this poetry and short stories. His writing style was recognized as typical “Gothic” style which presented either death, lost love or both. 
 Masterpiece: The Fall of the House of Usher, The Tell-Tale Heart, The Raven
 
+#### Howard Philips Lovecraft
 ![image](figs/330px-H_P_Lovecraft_June_1934.jpg)
 
-Howard Philips Lovecraft: 
 HP Lovecraft was an American author of fantasy, horror, and science fiction. His writing style was the “cosmism” or “cosmic horror”. It means life is incomprehensible to humankind and universe is inimical to the interest of humankind.
 Masterpiece: The Complete Fiction of H. P. Lovecraft, The Call of Cthulhu, Great Tales of Horror
 
+#### Mary Wollstonecraft Shelley
+
 ![image](figs/330px-RothwellMaryShelley.jpg)
 
-Mary Wollstonecraft Shelley:
 Mary Wollstonecraft Shelly was an English author of a horror novel. Her most famous novel is Frankenstein or Modern Prometheus. Shelley was good at combining love and horror and shown the romantic features in her horror novel.
 Masterpiece: Frankenstein, Modern Prometheus
 
